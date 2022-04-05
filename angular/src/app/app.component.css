@@ -1,0 +1,19 @@
+.mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #3fb53f;
+}
+
+.spinner-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1005;
+    background-color: rgba(10, 10, 10, 0.45);
+    overflow-y: scroll;
+  }
+
+.spinner-center{display:block;margin-left:auto;margin-right:auto}
+
+.spinner-margin-bottom{margin-bottom:1rem !important}

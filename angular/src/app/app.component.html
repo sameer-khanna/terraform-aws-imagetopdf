@@ -1,0 +1,23 @@
+<mat-sidenav-container>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+     <header style="margin: 0 auto">
+          Image 2 PDF Generator
+     </header>
+     <div fxFlex fxLayout fxLayoutAlign="flex-end"  fxHide.xs>
+     </div>
+    </mat-toolbar>
+    <main>
+    </main>
+    
+    <router-outlet></router-outlet>
+    <mat-progress-spinner *ngIf = showSpinner></mat-progress-spinner>
+    <div *ngIf="showSpinner">
+      <div class="spinner-overlay" id="load">
+          <img src="./assets/spinner.gif"
+              class="spinner-center spinner-margin-bottom" border="0" style="width: 5%;" />
+      </div>
+  </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

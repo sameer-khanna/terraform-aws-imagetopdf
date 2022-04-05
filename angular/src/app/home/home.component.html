@@ -1,0 +1,39 @@
+<form class="example-form">
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div class="form-group" style="text-align:center;">
+        <mat-card-title>Choose an Image to upload</mat-card-title>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+        <mat-card-subtitle><input type="file" id="file" (change)="onFileSelected($event)" #fileInput>
+        </mat-card-subtitle>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div style="text-align:center;">
+        <button aria-hidden=false mat-raised-button class="button" color="primary" (click)="uploadFile()"
+            [disabled]=!formData>
+            Upload Image
+        </button> &nbsp; &nbsp;
+        <button aria-hidden=false mat-raised-button class="button" color="primary" (click)="generatePDF()"
+            *ngIf=fileUploadSuccess>
+            Generate PDF
+        </button>
+        <a *ngIf=preSignedUrl mat-raised-button href={{preSignedUrl}} (click) = "clearSessionData()" target="_blank">View PDF</a>
+    </div>
+    <div *ngIf=fileUploadSuccess>&nbsp;</div>
+    <div class="form-group" style="text-align:center;" *ngIf=fileUploadSuccess>
+        <mat-card-subtitle style="color: green;">Your image was uploaded successfully. Click the Generate PDF button to
+            generate a PDF containing your image.</mat-card-subtitle>
+    </div>
+    <div *ngIf=preSignedUrl>&nbsp;</div>
+    <div class="form-group" style="text-align:center;" *ngIf=preSignedUrl>
+        <mat-card-subtitle style="color: green;">Your PDF was generated successfully. Click the View PDF button to
+            download your PDF.</mat-card-subtitle>
+    </div>
+    <div *ngIf=errorMessage>&nbsp;</div>
+    <div class="form-group" style="text-align:center;" *ngIf=errorMessage>
+        <mat-card-subtitle style="color: red;">{{errorMessage}}</mat-card-subtitle>
+    </div>
+</form>
