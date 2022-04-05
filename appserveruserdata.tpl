@@ -55,7 +55,13 @@ mkdir config
 aws s3 cp s3://app-deployables-us/image2pdfconverter-0.0.1-SNAPSHOT.jar /var/api/springboot
 aws s3 cp s3://app-deployables-us/application.properties /var/api/springboot/config
 
-cd ../
+cd config 
+
+sed -i "s|JDBC_URL|${rds_connection_string}|g" application.properties
+sed -i "s|DB_USERNAME|${rds_username}|g" application.properties
+sed -i "s|DB_PASSWORD|${rds_password}|g" application.properties
+
+cd ../../
 chmod 0775 -R springboot
 cd springboot
 

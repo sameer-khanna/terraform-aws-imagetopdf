@@ -1,5 +1,5 @@
 output "rds_connection_string" {
-  value     = "jdbc:mysql://${aws_db_instance.rds.address}/${var.name}?useSSL=false&amp"
+  value     = "jdbc:mysql://${aws_db_instance.rds.address}/${var.name}?useSSL=false"
   sensitive = true
 }
 

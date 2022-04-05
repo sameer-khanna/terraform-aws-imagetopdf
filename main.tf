@@ -1,10 +1,11 @@
 data "template_file" "userdata" {
   template = file("${path.module}/appserveruserdata.tpl")
   vars = {
-    rds_endpoint = module.database.rds_dns,
-    rds_username = module.parameters.rds-master-username,
-    rds_password = module.parameters.rds-master-password,
-    rds_dbname   = "imagetopdf"
+    rds_endpoint          = module.database.rds_dns,
+    rds_username          = module.parameters.rds-master-username,
+    rds_password          = module.parameters.rds-master-password,
+    rds_dbname            = "imagetopdf",
+    rds_connection_string = module.database.rds_connection_string
   }
 }
 
@@ -32,11 +33,11 @@ module "networking" {
 }
 
 module "compute" {
-  source                  = "./compute"
-  instance_type           = "t2.micro"
-  vpc_id                  = module.networking.vpc_id
-  security_groups         = local.security_groups
-  web_user_data           = filebase64("${path.module}/webserveruserdata.sh")
+  source          = "./compute"
+  instance_type   = "t2.micro"
+  vpc_id          = module.networking.vpc_id
+  security_groups = local.security_groups
+  # web_user_data           = filebase64("${path.module}/webserveruserdata.sh")
   app_user_data           = base64encode(data.template_file.userdata.rendered)
   sg_egress_cidr          = "0.0.0.0/0"
   sg_egress_from_port     = 0

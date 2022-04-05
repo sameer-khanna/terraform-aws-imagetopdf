@@ -1,7 +1,7 @@
 variable "instance_type" {}
 variable "vpc_id" {}
 variable "security_groups" {}
-variable "web_user_data" {}
+# variable "web_user_data" {}
 variable "app_user_data" {}
 variable "iam_managed_policy_s3" {}
 variable "iam_managed_policy_ssm" {}
