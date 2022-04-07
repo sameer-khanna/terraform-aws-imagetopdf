@@ -5,8 +5,9 @@ data "aws_route53_zone" "primary-hosted-zone" {
 
 resource "aws_route53_record" "sampleproject" {
   zone_id = data.aws_route53_zone.primary-hosted-zone.zone_id
-  name    = "sampleproject-${substr(uuid(), 0, 4)}.${data.aws_route53_zone.primary-hosted-zone.name}"
-  type    = "A"
+  # name    = "sampleproject-${substr(uuid(), 0, 4)}.${data.aws_route53_zone.primary-hosted-zone.name}"
+  name = "api.${data.aws_route53_zone.primary-hosted-zone.name}"
+  type = "A"
   lifecycle {
     ignore_changes = [name]
   }
