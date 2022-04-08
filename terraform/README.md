@@ -1,8 +1,9 @@
 # The Terraform code has the following modules - 
-* **Networking** - For VPC and all the related networking. We are using the 10.16.0.0/16 CIDR for the VPC and 16 /20 subnets (4 each for web, app, db and reserved). The subnets are spread across 4 AZs for high availability. This also creates a Gateway endpoint for S3 and multiple Interface endpoints in the App subnets for Sessions Manager.
-* **Compute** - For the launch templates, EC2 instances, instance profiles and security groups. The compute module first builds launch templates complete with user data and other settings and uses that to launch app instances in their ASG. The Spring boot API code resides in an S3 bucket that is pulled by the EC2 instances during bootstrapping.
-* **Load Balancing** -  For setting up the ASG, ALB, target group, target group attachments and listeners for the web tier. 
-* **DNS** - This is for creating an alias record to the web ALB (internet facing) in an existing public hosted zone. 
-* **Database** - This is for creating a subnet group and an RDS instance.
-* **Parameters** - This is for creating RDS related parameters in the Systems Manager Parameter Store. 
-* **Root** - This is the root module for orchestration between the other modules. The dynamic values are passed in from here to the modules. This makes the modules re-usable. 
+* **Networking** - For VPC and all the related networking. We are using the 10.16.0.0/16 CIDR for the VPC and 16 /20 subnets (4 each for web, app, db and reserved). The subnets are spread across 4 AZs for high availability. This also creates a Gateway endpoint for S3 and multiple Interface endpoints in the App subnets for connectivity using Sessions Manager.
+* **Compute** - For the launch templates, EC2 instances, instance profiles and security groups. The compute module first builds launch templates complete with user data and other settings and uses that to launch app instances in their ASG. The EC2 instances are provisioned in private subnets with no public IP addressing. The Spring boot API jar resides in an S3 bucket that is pulled by the EC2 instances (using the S3 gateway endpoint) during bootstrapping.
+* **Load Balancing** -  For setting up the ASG, ALB, target group, target group attachments and listeners for the web tier. The ALB is public facing and accordingly it's nodes are in the public subnets. The ALB serves traffic over SSL. 
+* **CDN** -  For creating a Cloudfront distribution with the S3 bucket (that hosts the frontend Angular code) as the origin. It uses a custom domain name and serves traffic over SSL. The S3 bucket is created manually and not managed using Terraform.
+* **DNS** - For creating alias records to the web ALB (internet facing) and the Cloudfront distribution in an existing public hosted zone. 
+* **Database** - For creating a subnet group (in the private DB subnets) and an RDS instance.
+* **Parameters** - For creating RDS related parameters in the Systems Manager Parameter Store. 
+* **Root** - This is the root module for orchestrating the flow with the other modules. The values required by the modules are passed in dynamically from here, thus making them re-usable. 
