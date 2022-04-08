@@ -33,11 +33,10 @@ module "networking" {
 }
 
 module "compute" {
-  source          = "./compute"
-  instance_type   = "t2.micro"
-  vpc_id          = module.networking.vpc_id
-  security_groups = local.security_groups
-  # web_user_data           = filebase64("${path.module}/webserveruserdata.sh")
+  source                  = "./compute"
+  instance_type           = "t2.micro"
+  vpc_id                  = module.networking.vpc_id
+  security_groups         = local.security_groups
   app_user_data           = base64encode(data.template_file.userdata.rendered)
   sg_egress_cidr          = "0.0.0.0/0"
   sg_egress_from_port     = 0
@@ -85,9 +84,9 @@ module "loadbalancing" {
   availability_zones                 = module.networking.app-subnet-availability_zone_names
   web_security_group_ids             = module.compute.web_security-group-ids
   web_subnets                        = module.networking.web_subnet_ids
-  web_listener_port                  = 80
+  web_listener_port                  = 443
   web_port                           = 8080
-  web_protocol                       = "HTTP"
+  web_protocol                       = "HTTPS"
   vpc_id                             = module.networking.vpc_id
   app_asg_max_size                   = 1
   app_asg_min_size                   = 1
@@ -100,6 +99,7 @@ module "loadbalancing" {
   app_protocol                       = "HTTP"
   gateway_endpoint_rt_association_id = module.networking.gateway_endpoint_rt_association_id
   rds_dns                            = module.database.rds_dns
+  acm_cert_domain                    = "api.sameerkhanna.net"
 }
 
 module "dns" {
@@ -108,6 +108,8 @@ module "dns" {
   web_alb_dns_name    = module.loadbalancing.web-alb-dns
   hosted_zone         = "sameerkhanna.net."
   vpc_id              = module.networking.vpc_id
+  cf-zone-id          = module.cdn.cf-zone-id
+  cf-dns              = module.cdn.cf-dns
 }
 
 module "database" {
@@ -129,4 +131,19 @@ module "parameters" {
   source            = "./parameters"
   db_username       = "admin"
   connection_string = module.database.rds_connection_string
+}
+
+module "cdn" {
+  source                 = "./cdn"
+  acm_cert_domain        = "web.sameerkhanna.net"
+  s3_bucket_name         = "project.sameerkhanna.net"
+  origin_id              = "s3_bucket"
+  root_object            = "index.html"
+  cf_alias               = ["web.sameerkhanna.net"]
+  viewer_protocol_policy = "redirect-to-https"
+  allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+  cached_methods         = ["GET", "HEAD"]
+  restriction_type       = "none"
+  oai_comment            = "OAI for the project.sameerkhana.net S3 bucket"
+  ssl_support_method     = "sni-only"
 }

@@ -2,6 +2,10 @@ data "aws_autoscaling_group" "app_asg" {
   name = aws_autoscaling_group.app_asg.name
 }
 
+data "aws_acm_certificate" "ssl_cert" {
+  domain = var.acm_cert_domain
+}
+
 resource "aws_lb" "web_alb" {
   name               = "webserver-alb"
   internal           = false
@@ -14,11 +18,17 @@ resource "aws_lb_listener" "web_alb_listener" {
   load_balancer_arn = aws_lb.web_alb.arn
   port              = var.web_listener_port
   protocol          = var.web_protocol
+  certificate_arn   = data.aws_acm_certificate.ssl_cert.arn
 
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app_alb_target_group.arn
   }
+}
+
+resource "aws_lb_listener_certificate" "ssl_cert" {
+  listener_arn    = aws_lb_listener.web_alb_listener.arn
+  certificate_arn = data.aws_acm_certificate.ssl_cert.arn
 }
 
 resource "aws_autoscaling_group" "app_asg" {

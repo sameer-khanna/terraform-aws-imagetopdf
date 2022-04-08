@@ -19,3 +19,4 @@ variable "app_protocol" {}
 variable "app_listener_port" {}
 variable "gateway_endpoint_rt_association_id" {}
 variable "rds_dns" {}
+variable "acm_cert_domain" {}

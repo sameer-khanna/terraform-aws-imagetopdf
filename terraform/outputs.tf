@@ -1,3 +1,7 @@
+output "frontend-url" {
+  value = "https://${module.dns.web-fqdn}/home"
+}
+
 output "rest-api-url" {
-  value = "http://${module.dns.web-fqdn}"
+  value = "https://${module.dns.api-fqdn}"
 }
