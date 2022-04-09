@@ -8,3 +8,6 @@ This application takes in an image from the user and generates a PDF (containing
 #### Work in progress
 * Adding authentication to the application using Cognito web Identity federation.
 * Dashboard for the users to view their image upload and generated PDF history.
+
+
+![AWS Architecture](https://github.com/sameer-khanna/terraform-aws-imagetopdf/blob/main/AWS%20Architecture%20diagram.jpg)
