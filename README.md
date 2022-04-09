@@ -10,4 +10,4 @@ This application takes in an image from the user and generates a PDF (containing
 * Dashboard for the users to view their image upload and generated PDF history.
 
 
-![AWS Architecture](https://github.com/sameer-khanna/terraform-aws-imagetopdf/blob/main/AWS%20Architecture%20diagram.jpg)
+![AWS Architecture](https://github.com/sameer-khanna/terraform-aws-imagetopdf/blob/main/AWS%20Architecture%20Diagram.png)
