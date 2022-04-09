@@ -13,5 +13,6 @@ This application takes in an image from the user and generates a PDF (containing
 There could be many things that can be improved in the Angular and Spring boot code but the basic idea was to create a simple CRUD application with primary focus on the AWS architecture and Terraform (IaC).
 
 #### AWS Architecture Diagram:
+The diagram below shows 3 AZs for ease of viewing but in reality the VPC spans across 4 AZs. That setting is, of course, configurable though.  
 
 ![AWS Architecture](https://github.com/sameer-khanna/terraform-aws-imagetopdf/blob/main/AWS%20Architecture%20Diagram.png)
