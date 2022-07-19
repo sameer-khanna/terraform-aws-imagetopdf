@@ -128,9 +128,13 @@ module "database" {
 }
 
 module "parameters" {
-  source            = "./parameters"
-  db_username       = "admin"
-  connection_string = module.database.rds_connection_string
+  source                 = "./parameters"
+  db_username            = "admin"
+  connection_string      = module.database.rds_connection_string
+  asg_name               = module.loadbalancing.asg-name
+  instance_warmup        = 60
+  min_healthy_percentage = 90
+  asg_refresh_strategy   = "Rolling"
 }
 
 module "cdn" {
@@ -146,4 +150,53 @@ module "cdn" {
   restriction_type       = "none"
   oai_comment            = "OAI for the project.sameerkhana.net S3 bucket"
   ssl_support_method     = "sni-only"
+}
+
+module "lambda" {
+  source                                  = "./lambda"
+  artifact_s3_bucket                      = "app-deployables-us"
+  iam_managed_policy_cwlogs               = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  iam_managed_policy_ssm_readonly         = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+  lambda_resource_policy_statement_id     = "AllowExecutionFromS3Bucket"
+  lambda_resource_policy_action           = "lambda:InvokeFunction"
+  lambda_resource_policy_principal        = "s3.amazonaws.com"
+  instance_refresh_iam_policy_name_prefix = "Lambda-EC2InstanceRefresh"
+  instance_refresh_iam_policy_statement = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "autoscaling:StartInstanceRefresh",
+          "autoscaling:CancelInstanceRefresh"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+  instance_refresh_iam_role_name_prefix = "Lambda-EC2InstanceRefresh"
+  instance_refresh_iam_role_trust_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      },
+    ]
+  })
+  lambda_function_name          = "ec2_instance_refresh"
+  lambda_function_code_filename = "${path.root}/lambda_function.zip"
+  lambda_function_handler       = "lambda_function.lambda_handler"
+  lambda_function_runtime       = "python3.9"
+  publish                       = true
+}
+
+module "storage" {
+  source               = "./storage"
+  lambda_arn           = module.lambda.lambda_arn
+  lambda_permission_id = module.lambda.lambda_permission_id
 }
