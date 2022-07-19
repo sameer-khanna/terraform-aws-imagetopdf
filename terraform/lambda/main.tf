@@ -10,6 +10,11 @@ data "aws_iam_policy" "ssm_read_only" {
   arn = var.iam_managed_policy_ssm_readonly
 }
 
+resource "random_integer" "random_int" {
+  min = 1
+  max = 9999
+}
+
 resource "aws_lambda_permission" "allow_bucket" {
   statement_id  = var.lambda_resource_policy_statement_id
   action        = var.lambda_resource_policy_action
@@ -30,7 +35,7 @@ resource "aws_iam_role" "lambda_ec2_instance_refresh" {
 }
 
 resource "aws_lambda_function" "ec2_instance_refresh_lambda" {
-  function_name = var.lambda_function_name
+  function_name = "ec2_instance_refresh-${random_integer.random_int.result}"
   role          = aws_iam_role.lambda_ec2_instance_refresh.arn
   filename      = var.lambda_function_code_filename
   handler       = var.lambda_function_handler

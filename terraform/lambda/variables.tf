@@ -8,7 +8,6 @@ variable "instance_refresh_iam_policy_name_prefix" {}
 variable "instance_refresh_iam_policy_statement" {}
 variable "instance_refresh_iam_role_name_prefix" {}
 variable "instance_refresh_iam_role_trust_policy" {}
-variable "lambda_function_name" {}
 variable "lambda_function_code_filename" {}
 variable "lambda_function_handler" {}
 variable "lambda_function_runtime" {}
