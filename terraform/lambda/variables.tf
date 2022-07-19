@@ -1,0 +1,15 @@
+variable "artifact_s3_bucket" {}
+variable "iam_managed_policy_cwlogs" {}
+variable "iam_managed_policy_ssm_readonly" {}
+variable "lambda_resource_policy_statement_id" {}
+variable "lambda_resource_policy_action" {}
+variable "lambda_resource_policy_principal" {}
+variable "instance_refresh_iam_policy_name_prefix" {}
+variable "instance_refresh_iam_policy_statement" {}
+variable "instance_refresh_iam_role_name_prefix" {}
+variable "instance_refresh_iam_role_trust_policy" {}
+variable "lambda_function_name" {}
+variable "lambda_function_code_filename" {}
+variable "lambda_function_handler" {}
+variable "lambda_function_runtime" {}
+variable "publish" {}
