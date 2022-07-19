@@ -19,7 +19,9 @@ There could be many things that can be improved in the Angular and Spring boot c
 * **CDN** -  For creating a Cloudfront distribution with the S3 bucket (that hosts the frontend Angular code) as the origin. It uses a custom domain name and serves traffic over SSL. It uses an Origin access identity (OAI) for authenticated access to the S3 bucket, thus the S3 bucket policy didn't have to allow public access. The S3 bucket is created manually and not managed using Terraform.
 * **DNS** - For creating alias records to the web ALB (internet facing) and the Cloudfront distribution in an existing public hosted zone. 
 * **Database** - For creating a subnet group (in the private DB subnets) and an RDS instance. The SQL scripts for creating the DB tables are executed using EC2 user data. This is a sample project and this made it easier. In Prod environments, your DBA could connect to an EC2 in one of the App subnets using Session Manager and execute scripts using the MySQL client already installed as part of the AMI.
-* **Parameters** - For creating RDS related parameters in the Systems Manager Parameter Store. 
+* **Parameters** - For creating RDS and Lambda related parameters in the Systems Manager Parameter Store. 
+* **Storage** - For creating bucket notification on the S3 bucket that holds the application artifacts. The notification will trigger a Lambda function when a new artifact is uploaded to the bucket. That Lambda function will trigger the ASG refresh, thus replacing the EC2 instances.
+* **Lambda** - For creating a Lambda function written in Python, it's resource policy, and the task execution role. This Lambda will be triggered via a bucket notification from the S3 bucket that holds the application artifacts. The Lambda function will trigger the ASG refresh, thus replacing the EC2 instances. The EC2 instances will pull the latest artifacts from the S3 bucket during bootstrapping using the user data script. 
 * **Root** - This is the root module for orchestrating the flow with the other modules. The values required by the modules are passed in dynamically from here, thus making them re-usable. 
 
 #### AWS Architecture Diagram:

@@ -188,7 +188,6 @@ module "lambda" {
       },
     ]
   })
-  lambda_function_name          = "ec2_instance_refresh"
   lambda_function_code_filename = "${path.root}/lambda_function.zip"
   lambda_function_handler       = "lambda_function.lambda_handler"
   lambda_function_runtime       = "python3.9"
