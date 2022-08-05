@@ -88,9 +88,9 @@ module "loadbalancing" {
   web_port                           = 8080
   web_protocol                       = "HTTPS"
   vpc_id                             = module.networking.vpc_id
-  app_asg_max_size                   = 1
+  app_asg_max_size                   = 2
   app_asg_min_size                   = 1
-  app_asg_desired_capacity           = 1
+  app_asg_desired_capacity           = 2
   app_launch_template_id             = module.compute.app-launch_template_id
   app_security_group_ids             = module.compute.app_security-group-ids
   app_subnets                        = module.networking.app-subnet.*.id
