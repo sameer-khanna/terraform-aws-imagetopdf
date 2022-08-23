@@ -92,6 +92,9 @@ resource "aws_launch_template" "appserver-lt" {
   description   = "App Server launch template created using Terraform."
   image_id      = var.appserver_ami_id
   instance_type = var.instance_type
+  instance_market_options {
+    market_type = "spot"
+  }
   network_interfaces {
     security_groups = [aws_security_group.app-security-group.id]
   }
